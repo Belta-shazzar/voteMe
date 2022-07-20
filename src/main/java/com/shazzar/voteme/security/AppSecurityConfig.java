@@ -14,9 +14,10 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*")
-                .permitAll()
+//                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                .antMatchers("/voteMe/v1/user").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

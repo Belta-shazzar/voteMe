@@ -1,5 +1,6 @@
-package com.shazzar.voteme.dto.requestdto;
+package com.shazzar.voteme.model.requestModel;
 
+import com.shazzar.voteme.entity.role.AppUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRequest {
     private String fullName;
-    private String userName;
     private String email;
+    private AppUserRole role;
     private String password;
 }
