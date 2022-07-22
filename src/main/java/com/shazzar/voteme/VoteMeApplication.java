@@ -9,5 +9,5 @@ public class VoteMeApplication {
     public static void main(String[] args) {
         SpringApplication.run(VoteMeApplication.class, args);
     }
-    
+
 }

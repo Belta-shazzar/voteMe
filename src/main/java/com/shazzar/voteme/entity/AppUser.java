@@ -24,10 +24,15 @@ public class AppUser implements UserDetails {
     private String fullName;
     @Column(unique = true)
     private String email;
-    private String password;
+    private String password; //test = password
 
     @Enumerated(EnumType.STRING)
     private AppUserRole role;
+    
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "election_event_id",
+            referencedColumnName = "id")
+    private ElectionEvent event;
     private Boolean isAccountNonLocked;
     private Boolean isEnabled;
 
@@ -38,7 +43,7 @@ public class AppUser implements UserDetails {
         this.password = password;
         this.role = role;
         this.isAccountNonLocked = true;
-        this.isEnabled = false;
+        this.isEnabled = true;
     }
 
     @Override
