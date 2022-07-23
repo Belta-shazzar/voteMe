@@ -33,6 +33,11 @@ public class AppUser implements UserDetails {
     @JoinColumn(name = "election_event_id",
             referencedColumnName = "id")
     private ElectionEvent event;
+    
+//    For candidates only
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "positionId")
+    private Position position;
     private Boolean isAccountNonLocked;
     private Boolean isEnabled;
 

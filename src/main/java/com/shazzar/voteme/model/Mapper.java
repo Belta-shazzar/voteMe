@@ -2,9 +2,12 @@ package com.shazzar.voteme.model;
 
 import com.shazzar.voteme.entity.AppUser;
 import com.shazzar.voteme.entity.ElectionEvent;
+import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.model.requestModel.ElectionEventRequest;
+import com.shazzar.voteme.model.requestModel.PositionRequest;
 import com.shazzar.voteme.model.requestModel.UserRequest;
 import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
+import com.shazzar.voteme.model.responseModel.PositionResponse;
 import com.shazzar.voteme.model.responseModel.UserResponse;
 
 public class Mapper {
@@ -38,5 +41,12 @@ public class Mapper {
         eventResponse.setCommenceDate(event.getCommenceDate());
         eventResponse.setEndDate(event.getEndDate());
         return eventResponse;
+    }
+    
+    public static PositionResponse positionToPositionModel(Position position) {
+        PositionResponse positionResponse = new PositionResponse();
+        positionResponse.setPositionTitle(position.getPositionTitle());
+        positionResponse.setEventName(position.getEvent().getEventName());
+        return positionResponse;
     }
 }

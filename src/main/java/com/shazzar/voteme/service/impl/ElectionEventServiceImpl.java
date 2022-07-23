@@ -9,21 +9,18 @@ import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
 import com.shazzar.voteme.model.requestModel.ElectionEventRequest;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-//@AllArgsConstructor
 public class ElectionEventServiceImpl implements ElectionEventService {
     
-    private ElectionEventRepo eventRepo;
+    private final ElectionEventRepo eventRepo;
     
-    private AppUserService userService;
+    private final AppUserService userService;
 
     public ElectionEventServiceImpl(ElectionEventRepo eventRepo, AppUserService userService) {
         this.eventRepo = eventRepo;

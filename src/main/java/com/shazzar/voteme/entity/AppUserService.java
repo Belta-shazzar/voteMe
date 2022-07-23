@@ -6,7 +6,7 @@ import com.shazzar.voteme.model.requestModel.UserRequest;
 import com.shazzar.voteme.model.responseModel.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.impl.ElectionEventServiceImpl;
-import lombok.AllArgsConstructor;
+import com.shazzar.voteme.service.impl.PositionServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,14 +20,17 @@ public class AppUserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG = "user with %s %s not found";
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private ElectionEventServiceImpl eventService;
+    private final PasswordEncoder passwordEncoder;
+    private final ElectionEventServiceImpl eventService;
+    private final PositionServiceImpl positionService;
 
     @Lazy
-    public AppUserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ElectionEventServiceImpl eventService) {
+    public AppUserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                          ElectionEventServiceImpl eventService, PositionServiceImpl positionService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventService = eventService;
+        this.positionService = positionService;
     }
 
     @Override

@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 public class UserRequest {
     private String fullName;
     private String email;
-    private AppUserRole role;
     private String password;
+    private AppUserRole role;
     private Long electionId;
+    private Long positionId;
 }
