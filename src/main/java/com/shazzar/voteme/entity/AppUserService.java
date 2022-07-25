@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppUserService implements UserDetailsService {
+public class  AppUserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG = "user with %s %s not found";
     private final UserRepository userRepository;
@@ -40,18 +40,24 @@ public class AppUserService implements UserDetailsService {
     }
     
     public UserResponse createUser(UserRequest userRequest) {
-        AppUser user = Mapper.userModel2User(userRequest);
-        if (!user.getRole().name().equals("ADMIN") && user.getEvent() == null) {
-            if (userRequest.getElectionId() != null) {
-                ElectionEvent event = eventService.getEventById(userRequest.getElectionId());
-                user.setEvent(event);
-            } else {
-                throw new IllegalStateException("Non admin user must have an event token");
-            }
+        UserRequest userCheck = checkRequest(userRequest);
+        AppUser user = Mapper.userModel2User(userCheck);
+        if (!userRequest.getRole().name().equals("ADMIN")) {
+            ElectionEvent event = eventService.getEventById(userRequest.getElectionId());
+            user.setEvent(event);
         }
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return Mapper.user2UserModel(user);
+    }
+
+    private UserRequest checkRequest(UserRequest userRequest) {
+        if (!userRequest.getRole().name().equals("ADMIN") && userRequest.getElectionId() == 0) {
+            throw new IllegalStateException("Non admin user must have an event token");
+        } else {
+            return userRequest;
+        }
     }
     
     public AppUser getById(Long id) throws ResourceNotFoundException {

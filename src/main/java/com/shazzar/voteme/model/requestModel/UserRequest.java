@@ -11,6 +11,6 @@ public class UserRequest {
     private String email;
     private String password;
     private AppUserRole role;
-    private Long electionId;
-    private Long positionId;
+    private Long electionId = 0L;
+    private Long positionId = 0L;
 }
