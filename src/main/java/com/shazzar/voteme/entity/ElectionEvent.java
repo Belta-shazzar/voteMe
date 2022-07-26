@@ -20,17 +20,29 @@ public class ElectionEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String eventName;
-    
+
     @Column(unique = true)
     private String token;
     private LocalDateTime dateCreated;
     private LocalDateTime commenceDate;
     private LocalDateTime endDate;
-    
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
-    private Set<AppUser> user;
+
+    @OneToMany(mappedBy = "event",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    private Set<User> users;
+
+    @OneToMany(mappedBy = "event",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    private Set<Position> positions;
+
+    @OneToMany(mappedBy = "event",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    private Set<Candidate> candidates;
 
     public ElectionEvent(String eventName) {
         this.eventName = eventName;

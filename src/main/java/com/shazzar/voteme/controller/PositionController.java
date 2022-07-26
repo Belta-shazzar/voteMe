@@ -21,8 +21,8 @@ public class PositionController {
     
     @PreAuthorize("hasAuthority('position:write')")
     @PostMapping
-    public ResponseEntity<PositionResponse> createPosition(@RequestBody PositionRequest request) {
-        PositionResponse position = positionService.createPosition(request);
+    public ResponseEntity<PositionResponse> addPosition(@RequestBody PositionRequest request) {
+        PositionResponse position = positionService.addPosition(request);
         
         return new ResponseEntity<>(position, HttpStatus.CREATED);
     }

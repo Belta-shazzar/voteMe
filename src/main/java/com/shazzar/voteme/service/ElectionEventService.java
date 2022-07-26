@@ -9,7 +9,7 @@ import com.shazzar.voteme.model.requestModel.ElectionEventRequest;
 
 public interface ElectionEventService {
     
-    ElectionEventResponse createEvent(ElectionEventRequest request) throws ResourceNotFoundException;
+    void createEvent(ElectionEvent event);
     ElectionEventResponse getEventByToken(TokenRequest tokenRequest);
     ElectionEvent getEventById(Long eventId);
     ElectionEventResponse setCommenceAndEndDate(ElectionDateSetRequest dateSet);

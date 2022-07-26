@@ -12,23 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("voteMe/v1/event")
 public class ElectionEventController {
     
     private ElectionEventService eventService;
-    
-    @SneakyThrows
-    @PreAuthorize("hasAuthority('event:write')")
-    @PostMapping
-    public ResponseEntity<ElectionEventResponse> createEvent(@RequestBody ElectionEventRequest eventRequest) {
-        ElectionEventResponse event = eventService.createEvent(eventRequest);
-        return new ResponseEntity<>(event, HttpStatus.CREATED);
-    }
     
     @PreAuthorize("hasAnyRole('CANDIDATE', 'USER')")
     @GetMapping

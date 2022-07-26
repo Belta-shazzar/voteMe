@@ -6,4 +6,6 @@ import lombok.Data;
 public class ElectionEventRequest {
     private String eventName;
     private Long userId;
+    
+//    This class is to be deleted
 }

@@ -6,4 +6,6 @@ import lombok.Data;
 public class PositionRequest {
     private String positionTitle;
     private Long eventId;
+
+//    This class is to be deleted
 }

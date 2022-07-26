@@ -17,16 +17,16 @@ public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String positionTitle;
     @ManyToOne
     private ElectionEvent event;
-    
+
     @OneToOne
-    private AppUser holder;
+    private User holder;
 
     @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
-    private Set<AppUser> aspirants;
+    private Set<Candidate> aspirants;
 
     public Position(String positionTitle, ElectionEvent event) {
         this.positionTitle = positionTitle;

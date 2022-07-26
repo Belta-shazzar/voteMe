@@ -1,4 +1,4 @@
-package com.shazzar.voteme.model.requestModel;
+package com.shazzar.voteme.model.requestModel.userRequest;
 
 import com.shazzar.voteme.entity.role.AppUserRole;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,5 @@ public class UserRequest {
     private String fullName;
     private String email;
     private String password;
-    private AppUserRole role;
-    private Long electionId = 0L;
-    private Long positionId = 0L;
+    private Long electionId;
 }

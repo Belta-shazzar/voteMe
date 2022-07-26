@@ -1,15 +1,15 @@
-package com.shazzar.voteme.model.responseModel;
+package com.shazzar.voteme.model.responseModel.userResponse;
 
+import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.role.AppUserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
-
     private String fullName;
     private String email;
-    private AppUserRole role;
-    private Boolean isEnabled;
+    private String eventName;
 }
