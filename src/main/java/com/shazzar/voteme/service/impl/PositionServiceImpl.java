@@ -1,5 +1,6 @@
 package com.shazzar.voteme.service.impl;
 
+import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
@@ -17,9 +18,11 @@ import java.util.Set;
 public class PositionServiceImpl implements PositionService {
     
     private final PositionRepository positionRepository;
+    private final ElectionEventServiceImpl service;
 
-    public PositionServiceImpl(PositionRepository positionRepository) {
+    public PositionServiceImpl(PositionRepository positionRepository, ElectionEventServiceImpl service) {
         this.positionRepository = positionRepository;
+        this.service = service;
     }
 
     @SneakyThrows
@@ -36,7 +39,12 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PositionResponse addPosition(PositionRequest request) {
-        return null;
+        Position position = new Position();
+        position.setPositionTitle(request.getPositionTitle());
+        ElectionEvent event = service.getEventByToken(request.getEventToken());
+        position.setEvent(event);
+        positionRepository.save(position);
+        return Mapper.positionToPositionModel(position);
     }
 
     @Override

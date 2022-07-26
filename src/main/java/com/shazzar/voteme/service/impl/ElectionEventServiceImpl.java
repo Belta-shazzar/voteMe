@@ -4,7 +4,6 @@ import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
-import com.shazzar.voteme.model.requestModel.TokenRequest;
 import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
@@ -13,18 +12,15 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Service
 public class ElectionEventServiceImpl implements ElectionEventService {
     
     private final ElectionEventRepo eventRepo;
     
-    private final userServiceImpl userService;
 
-    public ElectionEventServiceImpl(ElectionEventRepo eventRepo, userServiceImpl userService) {
+    public ElectionEventServiceImpl(ElectionEventRepo eventRepo) {
         this.eventRepo = eventRepo;
-        this.userService = userService;
     }
 
     @Override
@@ -36,10 +32,9 @@ public class ElectionEventServiceImpl implements ElectionEventService {
 
     @SneakyThrows
     @Override
-    public ElectionEventResponse getEventByToken(TokenRequest tokenRequest) {
-        ElectionEvent event = eventRepo.findByToken(tokenRequest.getToken()).orElseThrow(() ->
-                new ResourceNotFoundException("Event", "token", tokenRequest));
-        return Mapper.event2EventModel(event);
+    public ElectionEvent getEventByToken(String token) {
+        return eventRepo.findByToken(token).orElseThrow(() ->
+                new ResourceNotFoundException("Event", "token", token));
     }
 
     @SneakyThrows

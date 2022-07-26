@@ -28,8 +28,8 @@ public class AppSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll() //, "index", "/css/*", "/js/*"
-                .antMatchers("/voteMe/v1/user/**").permitAll()
+                .antMatchers("/**").permitAll() //, "index", "/css/*", "/js/*"
+                .antMatchers("/voteMe/v1/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

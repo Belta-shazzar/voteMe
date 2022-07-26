@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PositionRequest {
     private String positionTitle;
-    private Long eventId;
+    private String eventToken;
 
 //    This class is to be deleted
 }

@@ -1,5 +1,6 @@
 package com.shazzar.voteme.controller;
 
+import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.requestModel.TokenRequest;
 import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
@@ -21,8 +22,8 @@ public class ElectionEventController {
     
     @PreAuthorize("hasAnyRole('CANDIDATE', 'USER')")
     @GetMapping
-    public ResponseEntity<ElectionEventResponse> getEventByToken(@RequestBody TokenRequest tokenRequest) {
-        ElectionEventResponse event = eventService.getEventByToken(tokenRequest);
+    public ResponseEntity<ElectionEvent> getEventByToken(@RequestBody TokenRequest tokenRequest) {
+        ElectionEvent event = eventService.getEventByToken(tokenRequest.getToken());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
