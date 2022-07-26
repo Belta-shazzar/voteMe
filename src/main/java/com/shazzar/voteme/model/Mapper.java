@@ -3,7 +3,6 @@ package com.shazzar.voteme.model;
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
-import com.shazzar.voteme.model.requestModel.ElectionEventRequest;
 import com.shazzar.voteme.model.requestModel.userRequest.AdminRequest;
 import com.shazzar.voteme.model.requestModel.userRequest.CandidateRequest;
 import com.shazzar.voteme.model.requestModel.userRequest.UserRequest;
@@ -11,6 +10,10 @@ import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
 import com.shazzar.voteme.model.responseModel.PositionResponse;
 import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
 import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Mapper {
 
@@ -57,10 +60,6 @@ public class Mapper {
         return response;
     }
 
-    public static ElectionEvent eventModel2Event(ElectionEventRequest eventRequest) {
-        return new ElectionEvent(eventRequest.getEventName());
-    }
-
     public static ElectionEventResponse event2EventModel(ElectionEvent event) {
         ElectionEventResponse eventResponse = new ElectionEventResponse();
         eventResponse.setEventName(event.getEventName());
@@ -76,5 +75,14 @@ public class Mapper {
         positionResponse.setPositionTitle(position.getPositionTitle());
         positionResponse.setEventName(position.getEvent().getEventName());
         return positionResponse;
+    }
+    
+    public static Set<PositionResponse> positionToPositionModels(List<Position> positions) {
+//        TODO: Convert to stream API later;
+        Set<PositionResponse> positionSet = new HashSet<>();
+        for (Position position : positions) {
+            positionSet.add(positionToPositionModel(position));
+        }
+        return positionSet;
     }
 }

@@ -73,11 +73,25 @@ public class userServiceImpl implements UserService {
 
     @Override
     public UserResponse createCandidateUser(CandidateRequest request) {
-        return null;
+        User user = Mapper.userModel2User(request);
+        user.setRole(valueOf("CANDIDATE"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        ElectionEvent event = eEventService.getEventById(request.getElectionId());
+        user.setEvent(event);
+        Long positionId = request.getPositionId();
+        userRepository.save(user);
+        candidateService.addCandidate(positionId, user);
+        return Mapper.user2UserModel(user);
     }
 
     @Override
-    public UserResponse createUser(UserRequest userRequest) {
-        return null;
+    public UserResponse createUser(UserRequest request) {
+        User user = Mapper.userModel2User(request);
+        user.setRole(valueOf("USER"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        ElectionEvent event = eEventService.getEventById(request.getElectionId());
+        user.setEvent(event);
+        userRepository.save(user);
+        return Mapper.user2UserModel(user);
     }
 }

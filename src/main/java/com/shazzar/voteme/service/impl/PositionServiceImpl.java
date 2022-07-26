@@ -10,6 +10,9 @@ import com.shazzar.voteme.service.PositionService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class PositionServiceImpl implements PositionService {
     
@@ -34,5 +37,11 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public PositionResponse addPosition(PositionRequest request) {
         return null;
+    }
+
+    @Override
+    public Set<PositionResponse> getAllPosition() {
+        List<Position> positions = positionRepository.findAll();
+        return Mapper.positionToPositionModels(positions);
     }
 }
