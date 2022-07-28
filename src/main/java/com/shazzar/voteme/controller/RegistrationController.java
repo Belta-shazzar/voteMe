@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("voteMe/v1/user")
+@RequestMapping("voteMe/v1/register")
 @AllArgsConstructor
-public class UserController {
+public class RegistrationController {
     
     private UserService userService;
     

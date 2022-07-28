@@ -17,7 +17,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Sets.newHashSet(user.getRole().getGrantedAuthorities());
+        return user.getRole().getGrantedAuthorities();
     }
 
     @Override

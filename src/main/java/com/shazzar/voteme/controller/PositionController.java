@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+@PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
 @RestController
 @AllArgsConstructor
 @RequestMapping("voteMe/v1/position")
@@ -26,7 +27,7 @@ public class PositionController {
         return new ResponseEntity<>(position, HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('position:read')")
+    @PreAuthorize("hasAuthority('position:write')")
     @GetMapping
     public ResponseEntity<Set<PositionResponse>> getAllPosition() {
         Set<PositionResponse> positionResponses = positionService.getAllPosition();

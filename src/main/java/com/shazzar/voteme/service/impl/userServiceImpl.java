@@ -3,6 +3,7 @@ package com.shazzar.voteme.service.impl;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
+import com.shazzar.voteme.entity.role.AppUserRole;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestModel.userRequest.AdminRequest;
@@ -12,7 +13,6 @@ import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
 import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +25,9 @@ public class userServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ElectionEventServiceImpl eEventService;
-    
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
-
-
-    @Lazy
+    
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
                            CandidateServiceImpl candidateService) {
@@ -49,7 +46,7 @@ public class userServiceImpl implements UserService {
     @Override
     public AdminResponse createAdminUser(AdminRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("ADMIN"));
+        user.setRole(AppUserRole.ADMIN);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = createElection(request.getEventName());
         user.setEvent(event);
@@ -74,7 +71,7 @@ public class userServiceImpl implements UserService {
     @Override
     public UserResponse createCandidateUser(CandidateRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("CANDIDATE"));
+        user.setRole(AppUserRole.CANDIDATE);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);
@@ -87,7 +84,7 @@ public class userServiceImpl implements UserService {
     @Override
     public UserResponse createUser(UserRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("USER"));
+        user.setRole(AppUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig {
@@ -25,15 +26,10 @@ public class AppSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/**").permitAll() //, "index", "/css/*", "/js/*"
-                .antMatchers("/voteMe/v1/**").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+        http.cors();
+        http.csrf().disable();
+        http.authorizeRequests().antMatchers("/voteMe/**").permitAll();
+        http.authorizeRequests().anyRequest().authenticated();
 
         return http.build();
 
@@ -45,7 +41,7 @@ public class AppSecurityConfig {
         provider.setUserDetailsService(service);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
-    }
+    } 
 
 
 }

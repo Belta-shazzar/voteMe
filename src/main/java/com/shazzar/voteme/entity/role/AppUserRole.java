@@ -3,6 +3,7 @@ package com.shazzar.voteme.entity.role;
 
 
 import com.google.common.collect.Sets;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
@@ -25,7 +26,7 @@ public enum AppUserRole {
         return permissions;
     }
 
-    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+    public Set<? extends GrantedAuthority> getGrantedAuthorities() {
         Set<SimpleGrantedAuthority> permissions = getPermissions().stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
@@ -33,4 +34,5 @@ public enum AppUserRole {
         permissions.add(new SimpleGrantedAuthority("Role_" + this.name()));
         return permissions;
     }
+
 }
