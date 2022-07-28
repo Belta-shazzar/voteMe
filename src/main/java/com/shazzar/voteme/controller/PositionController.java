@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@PreAuthorize("hasAnyRole({'ADMIN', 'USER'})")
+@PreAuthorize("hasAnyRole({'ADMIN', 'USER', 'CANDIDATE'})")
 @RestController
 @AllArgsConstructor
 @RequestMapping("voteMe/v1/position")

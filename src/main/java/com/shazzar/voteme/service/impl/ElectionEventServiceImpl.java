@@ -5,6 +5,7 @@ import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
+import com.shazzar.voteme.model.responseModel.TokenResponse;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.SneakyThrows;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 public class ElectionEventServiceImpl implements ElectionEventService {
     
     private final ElectionEventRepo eventRepo;
+    private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
     
 
     public ElectionEventServiceImpl(ElectionEventRepo eventRepo) {
@@ -32,16 +34,17 @@ public class ElectionEventServiceImpl implements ElectionEventService {
 
     @SneakyThrows
     @Override
-    public ElectionEvent getEventByToken(String token) {
-        return eventRepo.findByToken(token).orElseThrow(() ->
-                new ResourceNotFoundException("Event", "token", token));
+    public TokenResponse getEventByToken(String token) {
+        ElectionEvent event = eventRepo.findByToken(token).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "Event", "token", token)));
+        return Mapper.eventToTokenModel(event);
     }
 
     @SneakyThrows
     @Override
     public ElectionEvent getEventById(Long eventId) {
         return eventRepo.findById(eventId).orElseThrow(() ->
-                new ResourceNotFoundException("Event", "Id", eventId));
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "Event", "Id", eventId)));
     }
 
     @Override

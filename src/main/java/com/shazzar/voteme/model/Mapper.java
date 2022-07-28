@@ -8,6 +8,7 @@ import com.shazzar.voteme.model.requestModel.userRequest.CandidateRequest;
 import com.shazzar.voteme.model.requestModel.userRequest.UserRequest;
 import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
 import com.shazzar.voteme.model.responseModel.PositionResponse;
+import com.shazzar.voteme.model.responseModel.TokenResponse;
 import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
 import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
 
@@ -58,6 +59,14 @@ public class Mapper {
         response.setEventName(event.getEventName());
         response.setEventToken(event.getToken());
         return response;
+    }
+    
+    public static TokenResponse eventToTokenModel(ElectionEvent event) {
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setEventId(event.getId());
+        tokenResponse.setToken(event.getToken());
+        tokenResponse.setEventName(event.getEventName());
+        return tokenResponse;
     }
 
     public static ElectionEventResponse event2EventModel(ElectionEvent event) {

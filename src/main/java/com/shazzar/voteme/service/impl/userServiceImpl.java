@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static com.shazzar.voteme.entity.role.AppUserRole.*;
 
 @Service
 public class userServiceImpl implements UserService {
@@ -27,6 +26,7 @@ public class userServiceImpl implements UserService {
     private final ElectionEventServiceImpl eEventService;
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
+    private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
     
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
@@ -39,8 +39,9 @@ public class userServiceImpl implements UserService {
     }
     
     public User getById(Long id) throws ResourceNotFoundException {
+        
         return userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User", "id", id));
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "User", "id", id)));
     }
 
     @Override

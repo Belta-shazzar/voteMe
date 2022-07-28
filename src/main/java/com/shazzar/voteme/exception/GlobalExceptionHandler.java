@@ -13,17 +13,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorMessage> resourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage());
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<String> mainResourceNotFoundException(ResourceNotFoundException ex) {
-////        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage());
-//
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-//    }
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ErrorMessage> mainResourceNotFoundException(AlreadyExistException ex) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
 
 
 }
