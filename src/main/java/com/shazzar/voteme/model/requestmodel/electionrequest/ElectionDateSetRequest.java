@@ -1,8 +1,6 @@
-package com.shazzar.voteme.model.requestModel;
+package com.shazzar.voteme.model.requestmodel.electionrequest;
 
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class ElectionDateSetRequest {

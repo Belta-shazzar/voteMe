@@ -1,4 +1,4 @@
-package com.shazzar.voteme.security.userAuth;
+package com.shazzar.voteme.security.userauth;
 
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.repository.UserRepository;

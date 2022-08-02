@@ -1,11 +1,11 @@
 package com.shazzar.voteme.controller;
 
-import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.service.UserService;
-import com.shazzar.voteme.model.requestModel.userRequest.AdminRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.CandidateRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.UserRequest;
-import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
+import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

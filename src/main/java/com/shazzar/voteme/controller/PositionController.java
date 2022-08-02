@@ -1,7 +1,7 @@
 package com.shazzar.voteme.controller;
 
-import com.shazzar.voteme.model.requestModel.PositionRequest;
-import com.shazzar.voteme.model.responseModel.PositionResponse;
+import com.shazzar.voteme.model.requestmodel.PositionRequest;
+import com.shazzar.voteme.model.responsemodel.PositionResponse;
 import com.shazzar.voteme.service.PositionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class PositionController {
         return new ResponseEntity<>(position, HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('position:write')")
+    @PreAuthorize("hasAuthority('position:read')")
     @GetMapping
     public ResponseEntity<Set<PositionResponse>> getAllPosition() {
         Set<PositionResponse> positionResponses = positionService.getAllPosition();

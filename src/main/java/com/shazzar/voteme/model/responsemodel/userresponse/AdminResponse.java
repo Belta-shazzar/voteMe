@@ -1,4 +1,4 @@
-package com.shazzar.voteme.model.responseModel.userResponse;
+package com.shazzar.voteme.model.responsemodel.userresponse;
 
 import lombok.Data;
 

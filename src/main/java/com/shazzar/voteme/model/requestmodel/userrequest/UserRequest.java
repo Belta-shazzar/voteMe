@@ -1,12 +1,11 @@
-package com.shazzar.voteme.model.requestModel.userRequest;
+package com.shazzar.voteme.model.requestmodel.userrequest;
 
 import lombok.Data;
 
 @Data
-public class CandidateRequest {
+public class UserRequest {
     private String fullName;
     private String email;
     private String password;
     private Long electionId;
-    private Long positionId;
 }

@@ -19,10 +19,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AlreadyExistException.class)
-    public ResponseEntity<ErrorMessage> mainResourceNotFoundException(AlreadyExistException ex) {
+    public ResponseEntity<ErrorMessage> alreadyExistException(AlreadyExistException ex) {
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+    
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorMessage> illegalStateException(IllegalStateException ex) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST, ex.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
 

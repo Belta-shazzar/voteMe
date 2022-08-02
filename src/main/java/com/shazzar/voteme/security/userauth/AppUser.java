@@ -1,4 +1,4 @@
-package com.shazzar.voteme.security.userAuth;
+package com.shazzar.voteme.security.userauth;
 
 import com.google.common.collect.Sets;
 import com.shazzar.voteme.entity.User;
@@ -17,7 +17,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().getGrantedAuthorities();
+        return Sets.newHashSet(user.getRole().getGrantedAuthorities());
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Candidate {
+public class  Candidate {
     @Id
     @Column(name = "candidateId", nullable = false)
     private Long id;

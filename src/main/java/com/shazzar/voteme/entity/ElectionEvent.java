@@ -3,7 +3,6 @@ package com.shazzar.voteme.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -14,7 +13,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class ElectionEvent {
     @Id
@@ -30,7 +28,7 @@ public class ElectionEvent {
     private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "event",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
     private Set<User> users;
 
@@ -40,7 +38,7 @@ public class ElectionEvent {
     private Set<Position> positions;
 
     @OneToMany(mappedBy = "event",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE)
     private Set<Candidate> candidates;
 
@@ -59,5 +57,16 @@ public class ElectionEvent {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "eventName = " + eventName + ", " +
+                "token = " + token + ", " +
+                "dateCreated = " + dateCreated + ", " +
+                "commenceDate = " + commenceDate + ", " +
+                "endDate = " + endDate + ")";
     }
 }

@@ -1,9 +1,8 @@
 package com.shazzar.voteme.controller;
 
-import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
-import com.shazzar.voteme.model.requestModel.TokenRequest;
-import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
-import com.shazzar.voteme.model.responseModel.TokenResponse;
+import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
+import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
+import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +17,9 @@ public class ElectionEventController {
     
     private ElectionEventService eventService;
     
-    @PreAuthorize("hasAnyRole('CANDIDATE', 'USER')")
     @GetMapping
-    public ResponseEntity<TokenResponse> getEventByToken(@RequestBody TokenRequest tokenRequest) {
-        TokenResponse event = eventService.getEventByToken(tokenRequest.getToken());
+    public ResponseEntity<TokenResponse> getEventByToken(@RequestBody String token) {
+        TokenResponse event = eventService.getEventByToken(token);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 

@@ -14,7 +14,7 @@ import static com.shazzar.voteme.entity.role.AppUserPermission.*;
 public enum AppUserRole {
     USER(Sets.newHashSet(USER_READ, USER_WRITE, POSITION_READ)),
     CANDIDATE(Sets.newHashSet(USER_READ, USER_WRITE, POSITION_READ)),
-    ADMIN(Sets.newHashSet(USER_READ, USER_WRITE, POSITION_READ, POSITION_WRITE,EVENT_READ, EVENT_WRITE));
+    ADMIN(Sets.newHashSet(USER_READ, USER_WRITE, POSITION_READ, POSITION_WRITE, EVENT_READ, EVENT_WRITE));
 
     private final Set<AppUserPermission> permissions;
 

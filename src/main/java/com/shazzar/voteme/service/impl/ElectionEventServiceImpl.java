@@ -3,9 +3,9 @@ package com.shazzar.voteme.service.impl;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
-import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
-import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
-import com.shazzar.voteme.model.responseModel.TokenResponse;
+import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
+import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
+import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.SneakyThrows;
@@ -62,5 +62,14 @@ public class ElectionEventServiceImpl implements ElectionEventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         return LocalDateTime.parse(dateTimeString, formatter);
+    }
+    
+    public void checkDate(ElectionEvent event) {
+        LocalDateTime dateTime = LocalDateTime.now();
+        if (dateTime.isBefore(event.getCommenceDate())) {
+            throw new IllegalStateException("Not yet time for election");
+        } else if (dateTime.isAfter(event.getEndDate())) {
+            throw new IllegalStateException("Election has ended");
+        }
     }
 }

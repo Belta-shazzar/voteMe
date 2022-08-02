@@ -1,8 +1,5 @@
-package com.shazzar.voteme.model.responseModel.userResponse;
+package com.shazzar.voteme.model.responsemodel.userresponse;
 
-import com.shazzar.voteme.entity.ElectionEvent;
-import com.shazzar.voteme.entity.role.AppUserRole;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

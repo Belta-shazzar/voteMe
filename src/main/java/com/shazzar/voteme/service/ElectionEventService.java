@@ -1,9 +1,9 @@
 package com.shazzar.voteme.service;
 
 import com.shazzar.voteme.entity.ElectionEvent;
-import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
-import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
-import com.shazzar.voteme.model.responseModel.TokenResponse;
+import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
+import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
+import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 
 public interface ElectionEventService {
     
