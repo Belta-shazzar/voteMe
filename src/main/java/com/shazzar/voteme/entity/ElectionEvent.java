@@ -19,6 +19,7 @@ public class ElectionEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String eventName;
 
     @Column(unique = true)

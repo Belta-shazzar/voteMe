@@ -19,6 +19,8 @@ public class ElectionEventServiceImpl implements ElectionEventService {
     
     private final ElectionEventRepo eventRepo;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
+
+//    TODO: Check if commence date and end date are valid
     
 
     public ElectionEventServiceImpl(ElectionEventRepo eventRepo) {

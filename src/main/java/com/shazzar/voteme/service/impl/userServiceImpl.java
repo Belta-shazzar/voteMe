@@ -28,6 +28,8 @@ public class userServiceImpl implements UserService {
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
+
+//    TODO: Implement method to validate email and password
     
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,

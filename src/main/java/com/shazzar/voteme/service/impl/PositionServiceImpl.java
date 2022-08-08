@@ -24,6 +24,8 @@ public class PositionServiceImpl implements PositionService {
     private final ElectionEventServiceImpl service;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
 
+//    TODO: Validate position title for length
+
     public PositionServiceImpl(PositionRepository positionRepository, ElectionEventServiceImpl service) {
         this.positionRepository = positionRepository;
         this.service = service;
