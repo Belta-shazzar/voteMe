@@ -1,5 +1,7 @@
 package com.shazzar.voteme.controller;
 
+import com.shazzar.voteme.config.userauth.AppUserService;
+import com.shazzar.voteme.model.requestmodel.userrequest.SignInRequest;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.service.UserService;
 import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
@@ -18,7 +20,8 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class RegistrationController {
     
-    private UserService userService;
+    private final UserService userService;
+    private final AppUserService authenticationService;
     
     @PostMapping("/admin")
     public ResponseEntity<AdminResponse> createAdminUser(@RequestBody @Valid AdminRequest request) {
@@ -36,5 +39,10 @@ public class RegistrationController {
     public ResponseEntity<UserResponse> createCasualUser(@RequestBody @Valid UserRequest userRequest) {
         UserResponse user = userService.createUser(userRequest);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/authentication")
+    public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest request) {
+        return new ResponseEntity<>(authenticationService.authenticateUser(request), HttpStatus.OK);
     }
 }

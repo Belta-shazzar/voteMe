@@ -6,6 +6,7 @@ import com.shazzar.voteme.service.PositionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -18,6 +19,7 @@ public class PositionController {
     private final PositionService positionService;
 
 
+    @PreAuthorize("hasAuthority('position:write')")
     @PostMapping
     public ResponseEntity<PositionResponse> addPosition(@RequestBody PositionRequest request) {
         PositionResponse position = positionService.addPosition(request);

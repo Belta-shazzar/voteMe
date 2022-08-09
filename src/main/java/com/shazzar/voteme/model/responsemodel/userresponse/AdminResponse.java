@@ -8,4 +8,5 @@ public class AdminResponse {
     private String email;
     private String eventName;
     private String eventToken;
+    private String jwtToken;
 }

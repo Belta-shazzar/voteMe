@@ -43,21 +43,24 @@ public class Mapper {
         return user;
     }
     
-       public static UserResponse user2UserModel(User user) {
+       public static UserResponse user2UserModel(User user, String jwt) {
             UserResponse response = new UserResponse();
+            response.setId(user.getId());
             response.setFullName(user.getFullName());
             response.setEmail(user.getEmail());
             response.setEventName(user.getEvent().getEventName());
+            response.setJwtToken(jwt);
             return response;
        }
 
-    public static AdminResponse admin2UserModel(User user) {
+    public static AdminResponse admin2UserModel(User user, String jwt) {
         AdminResponse response = new AdminResponse();
         response.setFullName(user.getFullName());
         response.setEmail(user.getEmail());
         ElectionEvent event = user.getEvent();
         response.setEventName(event.getEventName());
         response.setEventToken(event.getToken());
+        response.setJwtToken(jwt);
         return response;
     }
     

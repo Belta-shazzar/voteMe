@@ -1,5 +1,6 @@
 package com.shazzar.voteme.service.impl;
 
+import com.shazzar.voteme.config.userauth.AppUser;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
@@ -13,7 +14,7 @@ import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
-import lombok.SneakyThrows;
+import com.shazzar.voteme.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +28,20 @@ public class userServiceImpl implements UserService {
     private final ElectionEventServiceImpl eEventService;
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
+    private final JwtUtil jwtUtil;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
 
 //    TODO: Implement method to validate email and password
     
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
-                           CandidateServiceImpl candidateService) {
+                           CandidateServiceImpl candidateService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eEventService = eEventService;
         this.positionService = positionService;
         this.candidateService = candidateService;
+        this.jwtUtil = jwtUtil;
     }
     
     public User getById(Long id) throws ResourceNotFoundException {
@@ -56,7 +59,8 @@ public class userServiceImpl implements UserService {
         user.setEvent(event);
         createAPosition(event, request.getPositionTitle());
         userRepository.save(user);
-        return Mapper.admin2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.admin2UserModel(user, jwt);
     }
 
     private ElectionEvent createElection(String eventName) {
@@ -82,7 +86,8 @@ public class userServiceImpl implements UserService {
         Long positionId = request.getPositionId();
         userRepository.save(user);
         candidateService.addCandidate(positionId, user);
-        return Mapper.user2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
@@ -93,6 +98,7 @@ public class userServiceImpl implements UserService {
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);
         userRepository.save(user);
-        return Mapper.user2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.user2UserModel(user, jwt);
     }
 }
