@@ -1,61 +1,66 @@
 package com.shazzar.voteme.service.impl;
 
+import com.shazzar.voteme.config.userauth.AppUser;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
+import com.shazzar.voteme.entity.role.AppUserRole;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
-import com.shazzar.voteme.model.requestModel.userRequest.AdminRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.CandidateRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.UserRequest;
-import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
-import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
+import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
+import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
-import org.springframework.context.annotation.Lazy;
+import com.shazzar.voteme.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static com.shazzar.voteme.entity.role.AppUserRole.*;
 
 @Service
 public class userServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ElectionEventServiceImpl eEventService;
-    
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
+    private final JwtUtil jwtUtil;
+    private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
 
-
-    @Lazy
+//    TODO: Implement method to validate email and password
+    
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
-                           CandidateServiceImpl candidateService) {
+                           CandidateServiceImpl candidateService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eEventService = eEventService;
         this.positionService = positionService;
         this.candidateService = candidateService;
+        this.jwtUtil = jwtUtil;
     }
     
     public User getById(Long id) throws ResourceNotFoundException {
+        
         return userRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("User", "id", id));
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "User", "id", id)));
     }
 
     @Override
     public AdminResponse createAdminUser(AdminRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("ADMIN"));
+        user.setRole(AppUserRole.ADMIN);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = createElection(request.getEventName());
         user.setEvent(event);
         createAPosition(event, request.getPositionTitle());
         userRepository.save(user);
-        return Mapper.admin2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.admin2UserModel(user, jwt);
     }
 
     private ElectionEvent createElection(String eventName) {
@@ -74,24 +79,26 @@ public class userServiceImpl implements UserService {
     @Override
     public UserResponse createCandidateUser(CandidateRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("CANDIDATE"));
+        user.setRole(AppUserRole.CANDIDATE);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);
         Long positionId = request.getPositionId();
         userRepository.save(user);
         candidateService.addCandidate(positionId, user);
-        return Mapper.user2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
     public UserResponse createUser(UserRequest request) {
         User user = Mapper.userModel2User(request);
-        user.setRole(valueOf("USER"));
+        user.setRole(AppUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);
         userRepository.save(user);
-        return Mapper.user2UserModel(user);
+        String jwt = jwtUtil.generateToken(new AppUser(user));
+        return Mapper.user2UserModel(user, jwt);
     }
 }

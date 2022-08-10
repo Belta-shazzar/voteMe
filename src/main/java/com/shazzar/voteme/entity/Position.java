@@ -18,6 +18,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String positionTitle;
     @ManyToOne
     private ElectionEvent event;

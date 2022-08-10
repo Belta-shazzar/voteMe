@@ -3,13 +3,14 @@ package com.shazzar.voteme.model;
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
-import com.shazzar.voteme.model.requestModel.userRequest.AdminRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.CandidateRequest;
-import com.shazzar.voteme.model.requestModel.userRequest.UserRequest;
-import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
-import com.shazzar.voteme.model.responseModel.PositionResponse;
-import com.shazzar.voteme.model.responseModel.userResponse.AdminResponse;
-import com.shazzar.voteme.model.responseModel.userResponse.UserResponse;
+import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
+import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
+import com.shazzar.voteme.model.responsemodel.PositionResponse;
+import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,22 +43,33 @@ public class Mapper {
         return user;
     }
     
-       public static UserResponse user2UserModel(User user) {
+       public static UserResponse user2UserModel(User user, String jwt) {
             UserResponse response = new UserResponse();
+            response.setId(user.getId());
             response.setFullName(user.getFullName());
             response.setEmail(user.getEmail());
             response.setEventName(user.getEvent().getEventName());
+            response.setJwtToken(jwt);
             return response;
        }
 
-    public static AdminResponse admin2UserModel(User user) {
+    public static AdminResponse admin2UserModel(User user, String jwt) {
         AdminResponse response = new AdminResponse();
         response.setFullName(user.getFullName());
         response.setEmail(user.getEmail());
         ElectionEvent event = user.getEvent();
         response.setEventName(event.getEventName());
         response.setEventToken(event.getToken());
+        response.setJwtToken(jwt);
         return response;
+    }
+    
+    public static TokenResponse eventToTokenModel(ElectionEvent event) {
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setEventId(event.getId());
+        tokenResponse.setToken(event.getToken());
+        tokenResponse.setEventName(event.getEventName());
+        return tokenResponse;
     }
 
     public static ElectionEventResponse event2EventModel(ElectionEvent event) {

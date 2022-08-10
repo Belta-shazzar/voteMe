@@ -13,19 +13,20 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Candidate {
+public class  Candidate {
     @Id
     @Column(name = "candidateId", nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String candidateFullName;
     
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "positionId")
+    @JoinColumn(name = "positionId", nullable = false)
     private Position position;
     
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "election_event_id",
-            referencedColumnName = "id")
+            referencedColumnName = "id", nullable = false)
     private ElectionEvent event;
     
     @ManyToMany

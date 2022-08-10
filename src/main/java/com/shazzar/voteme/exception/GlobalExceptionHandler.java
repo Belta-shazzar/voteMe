@@ -13,17 +13,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorMessage> resourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage());
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<String> mainResourceNotFoundException(ResourceNotFoundException ex) {
-////        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, ex.getMessage());
-//
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-//    }
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ErrorMessage> alreadyExistException(AlreadyExistException ex) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+    
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorMessage> illegalStateException(IllegalStateException ex) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST, ex.getMessage());
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    }
 
 
 }

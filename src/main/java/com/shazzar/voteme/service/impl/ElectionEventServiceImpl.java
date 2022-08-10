@@ -3,8 +3,9 @@ package com.shazzar.voteme.service.impl;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
-import com.shazzar.voteme.model.requestModel.ElectionDateSetRequest;
-import com.shazzar.voteme.model.responseModel.ElectionEventResponse;
+import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
+import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
+import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.SneakyThrows;
@@ -17,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 public class ElectionEventServiceImpl implements ElectionEventService {
     
     private final ElectionEventRepo eventRepo;
+    private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
+
+//    TODO: Check if commence date and end date are valid
     
 
     public ElectionEventServiceImpl(ElectionEventRepo eventRepo) {
@@ -32,16 +36,17 @@ public class ElectionEventServiceImpl implements ElectionEventService {
 
     @SneakyThrows
     @Override
-    public ElectionEvent getEventByToken(String token) {
-        return eventRepo.findByToken(token).orElseThrow(() ->
-                new ResourceNotFoundException("Event", "token", token));
+    public TokenResponse getEventByToken(String token) {
+        ElectionEvent event = eventRepo.findByToken(token).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "Event", "token", token)));
+        return Mapper.eventToTokenModel(event);
     }
 
     @SneakyThrows
     @Override
     public ElectionEvent getEventById(Long eventId) {
         return eventRepo.findById(eventId).orElseThrow(() ->
-                new ResourceNotFoundException("Event", "Id", eventId));
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "Event", "Id", eventId)));
     }
 
     @Override
@@ -59,5 +64,14 @@ public class ElectionEventServiceImpl implements ElectionEventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         return LocalDateTime.parse(dateTimeString, formatter);
+    }
+    
+    public void checkDate(ElectionEvent event) {
+        LocalDateTime dateTime = LocalDateTime.now();
+        if (dateTime.isBefore(event.getCommenceDate())) {
+            throw new IllegalStateException("Not yet time for election");
+        } else if (dateTime.isAfter(event.getEndDate())) {
+            throw new IllegalStateException("Election has ended");
+        }
     }
 }

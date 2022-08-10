@@ -1,4 +1,4 @@
-package com.shazzar.voteme.model.responseModel.userResponse;
+package com.shazzar.voteme.model.responsemodel.userresponse;
 
 import lombok.Data;
 
@@ -8,4 +8,5 @@ public class AdminResponse {
     private String email;
     private String eventName;
     private String eventToken;
+    private String jwtToken;
 }

@@ -24,6 +24,7 @@ public class CandidateServiceImpl implements CandidateService {
         candidate.setId(user.getId());
         candidate.setCandidateFullName(user.getFullName());
         Position position = positionService.getPositionById(positionId);
+        candidate.setEvent(user.getEvent());
         candidate.setPosition(position);
         repo.save(candidate);
     }
