@@ -9,19 +9,23 @@ import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
 import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.RoleSwitchRequest;
 import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
 import com.shazzar.voteme.util.JwtUtil;
+import lombok.SneakyThrows;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 
 @Service
+@Transactional
 public class userServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -63,6 +67,8 @@ public class userServiceImpl implements UserService {
         return Mapper.admin2UserModel(user, jwt);
     }
 
+//    TODO: A null check method for event and position name
+
     private ElectionEvent createElection(String eventName) {
         ElectionEvent event = new ElectionEvent(eventName);
         String token = UUID.randomUUID().toString();
@@ -100,5 +106,20 @@ public class userServiceImpl implements UserService {
         userRepository.save(user);
         String jwt = jwtUtil.generateToken(new AppUser(user));
         return Mapper.user2UserModel(user, jwt);
+    }
+
+    @Override
+    @SneakyThrows
+    public String switchCandidateToUser(RoleSwitchRequest switchRequest) {
+        User user = getById(switchRequest.getCandidateId());
+        ElectionEvent event = eEventService.getEventById(switchRequest.getElectionId());
+        if (user.getEvent().equals(event) && user.getRole().equals(AppUserRole.CANDIDATE)) {
+            user.setRole(AppUserRole.USER);
+            candidateService.deleteCandidate(user.getId());
+            userRepository.save(user);
+            return user.getFullName();
+        } else {
+            throw new IllegalArgumentException("This user is not a candidate");
+        }
     }
 }

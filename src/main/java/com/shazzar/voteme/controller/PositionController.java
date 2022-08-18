@@ -26,8 +26,9 @@ public class PositionController {
         
         return new ResponseEntity<>(position, HttpStatus.CREATED);
     }
-    
 
+
+    @PreAuthorize("hasAuthority('position:read')")
     @GetMapping
     public ResponseEntity<Set<PositionResponse>> getAllPosition() {
         Set<PositionResponse> positionResponses = positionService.getAllPosition();
