@@ -4,4 +4,6 @@ import com.shazzar.voteme.entity.User;
 
 public interface CandidateService {
     void addCandidate(Long positionId, User user);
+
+    void deleteCandidate(Long id);
 }
