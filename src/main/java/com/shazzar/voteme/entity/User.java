@@ -32,7 +32,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AppUserRole role;
 
-    @ManyToMany(mappedBy = "voters")
+    @ManyToMany(mappedBy = "voters", cascade = CascadeType.MERGE)
     private Set<Candidate> votedCandidates;
 
     @ManyToOne(cascade = CascadeType.MERGE)

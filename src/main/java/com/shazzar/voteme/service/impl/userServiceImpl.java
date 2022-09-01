@@ -1,17 +1,16 @@
 package com.shazzar.voteme.service.impl;
 
 import com.shazzar.voteme.config.userauth.AppUser;
+import com.shazzar.voteme.entity.Candidate;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.entity.role.AppUserRole;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
-import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.RoleSwitchRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.*;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
@@ -21,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -55,19 +56,28 @@ public class userServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public AdminResponse createAdminUser(AdminRequest request) {
         User user = Mapper.userModel2User(request);
         user.setRole(AppUserRole.ADMIN);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        ElectionEvent event = createElection(request.getEventName());
+        String eventName = nullCheck(request.getEventName());
+        String positionTitle = nullCheck(request.getPositionTitle());
+        ElectionEvent event = createElection(eventName);
         user.setEvent(event);
-        createAPosition(event, request.getPositionTitle());
+        createAPosition(event, positionTitle);
         userRepository.save(user);
         String jwt = jwtUtil.generateToken(new AppUser(user));
         return Mapper.admin2UserModel(user, jwt);
     }
 
-//    TODO: A null check method for event and position name
+    public String nullCheck(String nameToCheck) {
+        if (nameToCheck == null) {
+            throw new IllegalArgumentException("missing field");
+        } else {
+            return nameToCheck;
+        }
+    }
 
     private ElectionEvent createElection(String eventName) {
         ElectionEvent event = new ElectionEvent(eventName);
@@ -110,16 +120,54 @@ public class userServiceImpl implements UserService {
 
     @Override
     @SneakyThrows
-    public String switchCandidateToUser(RoleSwitchRequest switchRequest) {
+    public UserActionResponse switchCandidateToUser(RoleSwitchRequest switchRequest) {
         User user = getById(switchRequest.getCandidateId());
         ElectionEvent event = eEventService.getEventById(switchRequest.getElectionId());
         if (user.getEvent().equals(event) && user.getRole().equals(AppUserRole.CANDIDATE)) {
             user.setRole(AppUserRole.USER);
             candidateService.deleteCandidate(user.getId());
             userRepository.save(user);
-            return user.getFullName();
+            String switchSuccess = user.getFullName() + " have been removed from candidate list";
+            return new UserActionResponse(switchSuccess);
         } else {
             throw new IllegalArgumentException("This user is not a candidate");
         }
+    }
+
+    @Override
+    @SneakyThrows
+    @Transactional
+    public UserActionResponse castVote(VoteRequest vote) {
+        ElectionEvent election = eEventService.getEventById(vote.getEventId());
+        eEventService.checkDate(election);
+        User user = getById(vote.getUserId());
+
+//        Check if this user have voted
+        if (!user.getVotedCandidates().isEmpty()) {
+            throw new IllegalArgumentException("This user already casted vote");
+        } else {
+            Set<Position> votedPosition = new HashSet<>();
+            Set<Candidate> votedCandidate = new HashSet<>();
+            for (String positionTitle : vote.getVoteMap().keySet()) {
+                for (Position position : election.getPositions()) {
+                    if (position.getPositionTitle().equals(positionTitle) && !votedPosition.contains(position)) {
+                        votedPosition.add(position);
+                        Candidate candidate = candidateService.getById(vote.getVoteMap().get(positionTitle));
+                        if (candidate.getPosition().equals(position)) {
+//                       TODO: To be continued
+                            candidate.getVoters().add(user);
+                            votedCandidate.add(candidate);
+//                        candidateService.saveCandidate(candidate);
+                        }
+                    }
+                }
+            }
+            user.setVotedCandidates(votedCandidate);
+            userRepository.save(user);
+            votedPosition.clear();
+            String voteSuccess = user.getFullName() + " successfully voted";
+            return new UserActionResponse(voteSuccess);
+        }
+
     }
 }
