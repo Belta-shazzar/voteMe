@@ -1,10 +1,8 @@
 package com.shazzar.voteme.service;
 
-import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.RoleSwitchRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
+import com.shazzar.voteme.model.requestmodel.userrequest.*;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 
 public interface UserService {
@@ -14,6 +12,8 @@ public interface UserService {
 
     UserResponse createUser(UserRequest userRequest);
 
-    String switchCandidateToUser(RoleSwitchRequest switchRequest);
+    UserActionResponse switchCandidateToUser(RoleSwitchRequest switchRequest);
+
+    UserActionResponse castVote(VoteRequest vote);
 }
 

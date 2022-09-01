@@ -9,6 +9,5 @@ public class VoteMeApplication {
         SpringApplication.run(VoteMeApplication.class, args);
     }
 
-//    Try out the environment variable thingy later
 
 }

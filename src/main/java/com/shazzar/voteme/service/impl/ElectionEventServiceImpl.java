@@ -52,10 +52,15 @@ public class ElectionEventServiceImpl implements ElectionEventService {
     @Override
     public ElectionEventResponse setCommenceAndEndDate(ElectionDateSetRequest dateSet) {
         ElectionEvent event = getEventById(dateSet.getEventId());
-        String commenceDate = dateSet.getCommenceDate();
-        String endDate = dateSet.getEndDate();
-        event.setCommenceDate(dateTimeFormat(commenceDate));
-        event.setEndDate(dateTimeFormat(endDate));
+        LocalDateTime commenceDate = dateTimeFormat(dateSet.getCommenceDate());
+        LocalDateTime endDate = dateTimeFormat(dateSet.getEndDate());
+        if (commenceDate.isAfter(LocalDateTime.now()) && endDate.isAfter(commenceDate)) {
+            event.setCommenceDate(commenceDate);
+            event.setEndDate(endDate);
+        } else {
+            throw new IllegalArgumentException("Incorrect date and time");
+        }
+
         eventRepo.save(event);
         return Mapper.event2EventModel(event);
     }
@@ -69,9 +74,9 @@ public class ElectionEventServiceImpl implements ElectionEventService {
     public void checkDate(ElectionEvent event) {
         LocalDateTime dateTime = LocalDateTime.now();
         if (dateTime.isBefore(event.getCommenceDate())) {
-            throw new IllegalStateException("Not yet time for election");
+            throw new IllegalArgumentException("Not yet time for election");
         } else if (dateTime.isAfter(event.getEndDate())) {
-            throw new IllegalStateException("Election has ended");
+            throw new IllegalArgumentException("Election has ended");
         }
     }
 }
