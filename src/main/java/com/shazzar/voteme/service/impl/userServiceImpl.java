@@ -16,6 +16,7 @@ import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
 import com.shazzar.voteme.util.JwtUtil;
 import lombok.SneakyThrows;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,10 +138,12 @@ public class userServiceImpl implements UserService {
     @Override
     @SneakyThrows
     @Transactional
-    public UserActionResponse castVote(VoteRequest vote) {
+    public UserActionResponse castVote(VoteRequest vote, String username) {
         ElectionEvent election = eEventService.getEventById(vote.getEventId());
         eEventService.checkDate(election);
-        User user = getById(vote.getUserId());
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("user with %s %s not found", "username", username))
+        );
 
 //        Check if this user have voted
         if (!user.getVotedCandidates().isEmpty()) {

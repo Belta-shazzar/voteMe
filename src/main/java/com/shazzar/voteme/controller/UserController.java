@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +26,9 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('Role_ADMIN', 'Role_CANDIDATE', 'Role_USER')")
     @PatchMapping("cast-vote")
-    public ResponseEntity<UserActionResponse> castVote(@RequestBody VoteRequest vote) {
-        return new ResponseEntity<>(userService.castVote(vote), HttpStatus.OK);
+    public ResponseEntity<UserActionResponse> castVote(@RequestBody VoteRequest vote, Authentication authentication) {
+        UserActionResponse response = userService.castVote(vote, authentication.getName());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

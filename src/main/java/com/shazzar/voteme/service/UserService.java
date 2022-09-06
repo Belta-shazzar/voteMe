@@ -14,6 +14,6 @@ public interface UserService {
 
     UserActionResponse switchCandidateToUser(RoleSwitchRequest switchRequest);
 
-    UserActionResponse castVote(VoteRequest vote);
+    UserActionResponse castVote(VoteRequest vote, String username);
 }
 
