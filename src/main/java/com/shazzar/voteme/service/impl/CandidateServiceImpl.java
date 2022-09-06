@@ -26,7 +26,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public Candidate getById(Long id) {
         return repo.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "User", "id", id)));
+                new ResourceNotFoundException(String.format(NOT_FOUND_ERROR_MSG, "Candidate", "id", id)));
     }
 
     @Override
