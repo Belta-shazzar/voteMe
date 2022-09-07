@@ -5,11 +5,11 @@ import com.shazzar.voteme.entity.Candidate;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
+import com.shazzar.voteme.entity.email.confirmationtoken.ConfirmationTokenService;
 import com.shazzar.voteme.entity.role.AppUserRole;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestmodel.userrequest.*;
-import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
@@ -34,6 +34,7 @@ public class userServiceImpl implements UserService {
     private final ElectionEventServiceImpl eEventService;
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
+    private final ConfirmationTokenService cTokenService;
     private final JwtUtil jwtUtil;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
 
@@ -41,12 +42,13 @@ public class userServiceImpl implements UserService {
     
     public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
-                           CandidateServiceImpl candidateService, JwtUtil jwtUtil) {
+                           CandidateServiceImpl candidateService, ConfirmationTokenService cTokenService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eEventService = eEventService;
         this.positionService = positionService;
         this.candidateService = candidateService;
+        this.cTokenService = cTokenService;
         this.jwtUtil = jwtUtil;
     }
     
@@ -58,7 +60,7 @@ public class userServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public AdminResponse createAdminUser(AdminRequest request) {
+    public UserActionResponse createAdminUser(AdminRequest request) {
         User user = Mapper.userModel2User(request);
         user.setRole(AppUserRole.ADMIN);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -68,8 +70,11 @@ public class userServiceImpl implements UserService {
         user.setEvent(event);
         createAPosition(event, positionTitle);
         userRepository.save(user);
-        String jwt = jwtUtil.generateToken(new AppUser(user));
-        return Mapper.admin2UserModel(user, jwt);
+
+        String accCreateResponse = cTokenService.createToken(user);
+        return new UserActionResponse(accCreateResponse);
+//        String jwt = jwtUtil.generateToken(new AppUser(user));
+//        return Mapper.admin2UserModel(user, jwt);
     }
 
     public String nullCheck(String nameToCheck) {
