@@ -6,7 +6,7 @@ import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 
 public interface UserService {
-    AdminResponse createAdminUser(AdminRequest request);
+    UserActionResponse createAdminUser(AdminRequest request);
 
     UserResponse createCandidateUser(CandidateRequest request);
 

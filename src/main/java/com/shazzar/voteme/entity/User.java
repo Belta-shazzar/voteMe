@@ -22,8 +22,8 @@ public class User {
     private String fullName;
 
     @Column(unique = true, nullable = false)
-    @Email(regexp = "[a-z]*@gmail.com",
-            message = "entered email not valid")
+//    @Email(regexp = "[a-z]*@gmail.com",
+//            message = "entered email not valid")
     private String email;
 
     @Column(nullable = false)
