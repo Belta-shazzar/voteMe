@@ -24,7 +24,7 @@ public class EmailSender implements EmailService {
         helper.setFrom("codetest.shazzar@gmail.com");
         helper.setSubject(subject);
         helper.setTo(toEmail);
-        helper.setText(emailUI);
+        helper.setText(emailUI, true);
         mailSender.send(message);
         System.out.println("Email sent...");
 

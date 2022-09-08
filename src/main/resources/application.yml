@@ -22,5 +22,11 @@ server:
               auth: 'true'
         host: smtp.gmail.com
         username: codetest.shazzar@gmail.com
-        password: dfsmonybhqmytjcv
+        password: phfnxnwncvzfedqq
         port: '587'
+
+  logging:
+    pattern:
+      console:
+    level: 'false'
+    root: OFF
