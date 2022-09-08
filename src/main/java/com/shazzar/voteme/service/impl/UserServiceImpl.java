@@ -11,7 +11,6 @@ import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestmodel.userrequest.*;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
-import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
 import com.shazzar.voteme.util.JwtUtil;
@@ -28,7 +27,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class userServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ElectionEventServiceImpl eEventService;
@@ -40,7 +39,7 @@ public class userServiceImpl implements UserService {
 
 //    TODO: Implement method to validate email and password
     
-    public userServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
                            CandidateServiceImpl candidateService, ConfirmationTokenService cTokenService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -69,9 +68,9 @@ public class userServiceImpl implements UserService {
         ElectionEvent event = createElection(eventName);
         user.setEvent(event);
         createAPosition(event, positionTitle);
+        String accCreateResponse = cTokenService.createToken(user);
         userRepository.save(user);
 
-        String accCreateResponse = cTokenService.createToken(user);
         return new UserActionResponse(accCreateResponse);
 //        String jwt = jwtUtil.generateToken(new AppUser(user));
 //        return Mapper.admin2UserModel(user, jwt);
@@ -99,7 +98,7 @@ public class userServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createCandidateUser(CandidateRequest request) {
+    public UserActionResponse createCandidateUser(CandidateRequest request) {
         User user = Mapper.userModel2User(request);
         user.setRole(AppUserRole.CANDIDATE);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -108,20 +107,27 @@ public class userServiceImpl implements UserService {
         Long positionId = request.getPositionId();
         userRepository.save(user);
         candidateService.addCandidate(positionId, user);
-        String jwt = jwtUtil.generateToken(new AppUser(user));
-        return Mapper.user2UserModel(user, jwt);
+        String accCreateResponse = cTokenService.createToken(user);
+        userRepository.save(user);
+
+        return new UserActionResponse(accCreateResponse);
+//        String jwt = jwtUtil.generateToken(new AppUser(user));
+//        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
-    public UserResponse createUser(UserRequest request) {
+    public UserActionResponse createUser(UserRequest request) {
         User user = Mapper.userModel2User(request);
         user.setRole(AppUserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         ElectionEvent event = eEventService.getEventById(request.getElectionId());
         user.setEvent(event);
+        String accCreateResponse = cTokenService.createToken(user);
         userRepository.save(user);
-        String jwt = jwtUtil.generateToken(new AppUser(user));
-        return Mapper.user2UserModel(user, jwt);
+
+        return new UserActionResponse(accCreateResponse);
+//        String jwt = jwtUtil.generateToken(new AppUser(user));
+//        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
@@ -177,5 +183,25 @@ public class userServiceImpl implements UserService {
             return new UserActionResponse(voteSuccess);
         }
 
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        if (user.getRole() == AppUserRole.CANDIDATE) {
+            candidateService.deleteCandidate(user.getId());
+        }
+
+        userRepository.delete(user);
+    }
+
+    @SneakyThrows
+    public String updateIsEnabled(User user) {
+        if (!user.getIsEnabled()) {
+            user.setIsEnabled(true);
+            userRepository.save(user);
+            return "Your account have been activated";
+        } else {
+            return "This account is already verified";
+        }
     }
 }

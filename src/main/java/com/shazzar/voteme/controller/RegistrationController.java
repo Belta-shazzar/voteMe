@@ -31,14 +31,14 @@ public class RegistrationController {
     }
 
     @PostMapping("/candidate")
-    public ResponseEntity<UserResponse> createCandidateUser(@RequestBody @Valid CandidateRequest request) {
-        UserResponse user = userService.createCandidateUser(request);
+    public ResponseEntity<UserActionResponse> createCandidateUser(@RequestBody @Valid CandidateRequest request) {
+        UserActionResponse user = userService.createCandidateUser(request);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserResponse> createCasualUser(@RequestBody @Valid UserRequest userRequest) {
-        UserResponse user = userService.createUser(userRequest);
+    public ResponseEntity<UserActionResponse> createCasualUser(@RequestBody @Valid UserRequest userRequest) {
+        UserActionResponse user = userService.createUser(userRequest);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
