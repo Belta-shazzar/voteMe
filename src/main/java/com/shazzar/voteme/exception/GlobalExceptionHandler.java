@@ -25,8 +25,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
     
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorMessage> illegalStateException(IllegalStateException ex) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessage> illegalArgumentException(IllegalArgumentException ex) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST, ex.getMessage());
         

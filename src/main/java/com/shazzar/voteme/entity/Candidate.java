@@ -29,7 +29,7 @@ public class  Candidate {
             referencedColumnName = "id", nullable = false)
     private ElectionEvent event;
     
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name="candidate_vote",
             joinColumns=
             @JoinColumn(name="CANDIDATE_ID", referencedColumnName="candidateId"),

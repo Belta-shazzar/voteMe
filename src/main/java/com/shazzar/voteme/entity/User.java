@@ -22,7 +22,7 @@ public class User {
     private String fullName;
 
     @Column(unique = true, nullable = false)
-    @Email(regexp = "[a-z]*@gmail.com",
+    @Email(regexp = "[a-z0-9]*@gmail.com",
             message = "entered email not valid")
     private String email;
 
@@ -32,7 +32,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AppUserRole role;
 
-    @ManyToMany(mappedBy = "voters")
+    @Column(nullable = false)
+    private Boolean isEnabled = false;
+
+    @ManyToMany(mappedBy = "voters", cascade = CascadeType.MERGE)
     private Set<Candidate> votedCandidates;
 
     @ManyToOne(cascade = CascadeType.MERGE)

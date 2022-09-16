@@ -3,6 +3,7 @@ package com.shazzar.voteme.controller;
 import com.shazzar.voteme.config.userauth.AppUserService;
 import com.shazzar.voteme.model.requestmodel.userrequest.SignInRequest;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.service.UserService;
 import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
 import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -24,25 +26,25 @@ public class RegistrationController {
     private final AppUserService authenticationService;
     
     @PostMapping("/admin")
-    public ResponseEntity<AdminResponse> createAdminUser(@RequestBody @Valid AdminRequest request) {
-        AdminResponse user = userService.createAdminUser(request);
+    public ResponseEntity<UserActionResponse> createAdminUser(@RequestBody @Valid AdminRequest request) {
+        UserActionResponse user = userService.createAdminUser(request);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PostMapping("/candidate")
-    public ResponseEntity<UserResponse> createCandidateUser(@RequestBody @Valid CandidateRequest request) {
-        UserResponse user = userService.createCandidateUser(request);
+    public ResponseEntity<UserActionResponse> createCandidateUser(@RequestBody @Valid CandidateRequest request) {
+        UserActionResponse user = userService.createCandidateUser(request);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserResponse> createCasualUser(@RequestBody @Valid UserRequest userRequest) {
-        UserResponse user = userService.createUser(userRequest);
+    public ResponseEntity<UserActionResponse> createCasualUser(@RequestBody @Valid UserRequest userRequest) {
+        UserActionResponse user = userService.createUser(userRequest);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PostMapping("/authentication")
-    public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest request) {
-        return new ResponseEntity<>(authenticationService.authenticateUser(request), HttpStatus.OK);
+    public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest userRequest, HttpServletRequest request) {
+        return new ResponseEntity<>(authenticationService.authenticateUser(userRequest, request), HttpStatus.OK);
     }
 }

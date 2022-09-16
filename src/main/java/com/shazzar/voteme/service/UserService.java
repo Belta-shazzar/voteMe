@@ -1,17 +1,21 @@
 package com.shazzar.voteme.service;
 
-import com.shazzar.voteme.model.requestmodel.userrequest.AdminRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.CandidateRequest;
-import com.shazzar.voteme.model.requestmodel.userrequest.UserRequest;
-import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
-import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
+import com.shazzar.voteme.entity.User;
+import com.shazzar.voteme.model.requestmodel.userrequest.*;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 
 public interface UserService {
-    AdminResponse createAdminUser(AdminRequest request);
+    UserActionResponse createAdminUser(AdminRequest request);
 
-    UserResponse createCandidateUser(CandidateRequest request);
+    UserActionResponse createCandidateUser(CandidateRequest request);
 
-    UserResponse createUser(UserRequest userRequest);
+    UserActionResponse createUser(UserRequest userRequest);
+
+    UserActionResponse switchCandidateToUser(RoleSwitchRequest switchRequest);
+
+    UserActionResponse castVote(VoteRequest vote, String username);
+
+    void deleteUser(User user);
 
 }
 
