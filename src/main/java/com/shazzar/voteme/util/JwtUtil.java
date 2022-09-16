@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,20 +51,20 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String jwt) {
-        final Date date = getExpirationFromToken(jwt);
-        return date.before(new Date());
+        final Date expiryDate = getExpirationFromToken(jwt);
+        return expiryDate.before(new Date());
     }
 
     public Date getExpirationFromToken(String jwt) {
         return getClaimsFromToken(jwt, Claims::getExpiration);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, HttpServletRequest request) {
         Map<String, Object> claims = new HashMap<>();
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuer("voteMe")
+                .setIssuer(request.getRequestURL().toString())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
@@ -73,7 +74,7 @@ public class JwtUtil {
 
     @SneakyThrows
     public void authenticate(String username, String password) {
-        
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException ex) {

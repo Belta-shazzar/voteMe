@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -43,7 +44,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/authentication")
-    public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest request) {
-        return new ResponseEntity<>(authenticationService.authenticateUser(request), HttpStatus.OK);
+    public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest userRequest, HttpServletRequest request) {
+        return new ResponseEntity<>(authenticationService.authenticateUser(userRequest, request), HttpStatus.OK);
     }
 }
