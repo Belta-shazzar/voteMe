@@ -7,5 +7,5 @@ import lombok.Data;
 public class PositionResponse {
     private String positionTitle;
     private String eventName;
-    private User holder;
+    private String holderName;
 }

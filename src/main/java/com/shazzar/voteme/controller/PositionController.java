@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -33,5 +34,11 @@ public class PositionController {
     public ResponseEntity<Set<PositionResponse>> getAllPosition() {
         Set<PositionResponse> positionResponses = positionService.getAllPosition();
         return new ResponseEntity<>(positionResponses, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('Role_ADMIN')")
+    @PatchMapping
+    public ResponseEntity<Set<PositionResponse>> setPositionHolders(Authentication authentication) {
+        return new ResponseEntity<>(positionService.setPositionHolders(authentication.getName()), HttpStatus.OK);
     }
 }

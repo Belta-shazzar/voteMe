@@ -14,4 +14,6 @@ public interface PositionService {
     PositionResponse addPosition(PositionRequest request);
     
     Set<PositionResponse> getAllPosition();
+
+    Set<PositionResponse> setPositionHolders(String name);
 }

@@ -12,6 +12,7 @@ import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,10 +87,11 @@ public class Mapper {
         PositionResponse positionResponse = new PositionResponse();
         positionResponse.setPositionTitle(position.getPositionTitle());
         positionResponse.setEventName(position.getEvent().getEventName());
+        positionResponse.setHolderName(position.getHolder().getFullName());
         return positionResponse;
     }
     
-    public static Set<PositionResponse> positionToPositionModels(List<Position> positions) {
+    public static Set<PositionResponse> positionToPositionModels(Collection<Position> positions) {
 //        TODO: Convert to stream API later;
         Set<PositionResponse> positionSet = new HashSet<>();
         for (Position position : positions) {

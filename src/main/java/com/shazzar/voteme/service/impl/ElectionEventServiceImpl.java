@@ -77,22 +77,27 @@ public class ElectionEventServiceImpl implements ElectionEventService {
 
     @Override
     public ElectionResultResponse getElectionResult(String name) {
-//        <PositionName, <CandidateName, No. of votes>
-        Map<String, Map<String, Integer>> resultResponse = new HashMap<>();
-
         User user = userService.getUserByUsername(name);
-        Set<Position> positions = user.getEvent().getPositions();
 
-        for (Position position : positions) {
-            Set<Candidate> candidates = position.getAspirants();
-            Map<String, Integer> candidatesVote = new HashMap<>();
-            for (Candidate candidate : candidates) {
-                candidatesVote.put(candidate.getCandidateFullName(), candidate.getVoters().size());
+        if (user.getEvent().getEndDate().isBefore(LocalDateTime.now())) {
+//        <PositionName, <CandidateName, No. of votes>
+            Map<String, Map<String, Integer>> resultResponse = new HashMap<>();
+
+            Set<Position> positions = user.getEvent().getPositions();
+
+            for (Position position : positions) {
+                Set<Candidate> candidates = position.getAspirants();
+                Map<String, Integer> candidatesVote = new HashMap<>();
+                for (Candidate candidate : candidates) {
+                    candidatesVote.put(candidate.getCandidateFullName(), candidate.getVoters().size());
+                }
+                resultResponse.put(position.getPositionTitle(), candidatesVote);
             }
-            resultResponse.put(position.getPositionTitle(), candidatesVote);
-        }
 
-        return new ElectionResultResponse(user.getEvent().getEventName(), resultResponse);
+            return new ElectionResultResponse(user.getEvent().getEventName(), resultResponse);
+        } else {
+            throw new IllegalArgumentException("Election is yet to end");
+        }
     }
 
     public LocalDateTime dateTimeFormat(String dateTimeString) {
