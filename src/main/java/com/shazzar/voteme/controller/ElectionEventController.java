@@ -1,7 +1,6 @@
 package com.shazzar.voteme.controller;
 
-import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
-import com.shazzar.voteme.model.requestmodel.electionrequest.TokenRequest;
+import com.shazzar.voteme.model.requestmodel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionResultResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
@@ -21,15 +20,16 @@ public class ElectionEventController {
     private ElectionEventService eventService;
     
     @GetMapping
-    public ResponseEntity<TokenResponse> getEventByToken(@RequestBody TokenRequest token) {
-        TokenResponse event = eventService.getEventByToken(token.getToken());
+    public ResponseEntity<TokenResponse> getEventByToken(@RequestParam String token) {
+        TokenResponse event = eventService.getEventByToken(token);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('event:write')")
     @PutMapping
-    public ResponseEntity<ElectionEventResponse> setCommenceAndEndDate(@RequestBody ElectionDateSetRequest dateSet) {
-        ElectionEventResponse event = eventService.setCommenceAndEndDate(dateSet);
+    public ResponseEntity<ElectionEventResponse> setCommenceAndEndDate(@RequestBody ElectionDateSetRequest dateSet,
+                                                                       Authentication authentication) {
+        ElectionEventResponse event = eventService.setCommenceAndEndDate(dateSet, authentication.getName());
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 

@@ -1,10 +1,9 @@
-package com.shazzar.voteme.model.requestmodel.electionrequest;
+package com.shazzar.voteme.model.requestmodel;
 
 import lombok.Data;
 
 @Data
 public class ElectionDateSetRequest {
-    private Long eventId;
     private String commenceDate;
     private String endDate;
     

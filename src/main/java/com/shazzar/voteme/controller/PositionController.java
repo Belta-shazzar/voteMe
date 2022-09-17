@@ -22,8 +22,9 @@ public class PositionController {
 
     @PreAuthorize("hasAuthority('position:write')")
     @PostMapping
-    public ResponseEntity<PositionResponse> addPosition(@RequestBody PositionRequest request) {
-        PositionResponse position = positionService.addPosition(request);
+    public ResponseEntity<PositionResponse> addPosition(@RequestBody PositionRequest request,
+                                                        Authentication authentication) {
+        PositionResponse position = positionService.addPosition(request, authentication.getName());
         
         return new ResponseEntity<>(position, HttpStatus.CREATED);
     }
@@ -31,8 +32,8 @@ public class PositionController {
 
     @PreAuthorize("hasAuthority('position:read')")
     @GetMapping
-    public ResponseEntity<Set<PositionResponse>> getAllPosition() {
-        Set<PositionResponse> positionResponses = positionService.getAllPosition();
+    public ResponseEntity<Set<PositionResponse>> getAllPosition(Authentication authentication) {
+        Set<PositionResponse> positionResponses = positionService.getAllPosition(authentication.getName());
         return new ResponseEntity<>(positionResponses, HttpStatus.OK);
     }
 

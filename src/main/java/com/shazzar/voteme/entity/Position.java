@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class Position {
     private User holder;
 
     @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
-    private Set<Candidate> aspirants;
+    private Set<Candidate> aspirants = new HashSet<>();
 
     public Position(String positionTitle, ElectionEvent event) {
         this.positionTitle = positionTitle;

@@ -7,7 +7,7 @@ import com.shazzar.voteme.entity.Position;
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
-import com.shazzar.voteme.model.requestmodel.electionrequest.ElectionDateSetRequest;
+import com.shazzar.voteme.model.requestmodel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionResultResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
@@ -60,8 +60,9 @@ public class ElectionEventServiceImpl implements ElectionEventService {
     }
 
     @Override
-    public ElectionEventResponse setCommenceAndEndDate(ElectionDateSetRequest dateSet) {
-        ElectionEvent event = getEventById(dateSet.getEventId());
+    public ElectionEventResponse setCommenceAndEndDate(ElectionDateSetRequest dateSet, String userName) {
+        User user = userService.getUserByUsername(userName);
+        ElectionEvent event = user.getEvent();
         LocalDateTime commenceDate = dateTimeFormat(dateSet.getCommenceDate());
         LocalDateTime endDate = dateTimeFormat(dateSet.getEndDate());
         if (commenceDate.isAfter(LocalDateTime.now()) && endDate.isAfter(commenceDate)) {

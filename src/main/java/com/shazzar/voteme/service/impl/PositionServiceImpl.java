@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -52,23 +51,23 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public PositionResponse addPosition(PositionRequest request) {
-        checkPositionEvent(request);
+    public PositionResponse addPosition(PositionRequest request, String userName) {
+        User adminUser = userService.getUserByUsername(userName);
+        ElectionEvent event = adminUser.getEvent();
+        checkPositionEvent(request.getPositionTitle(), event.getId());
         Position position = new Position();
         position.setPositionTitle(request.getPositionTitle());
-        ElectionEvent event = service.getEventById(request.getEventId());
         position.setEvent(event);
         positionRepository.save(position);
         return Mapper.positionToPositionModel(position);
     }
     
     @SneakyThrows
-    public void checkPositionEvent(PositionRequest request) {
-        String positionTitle = request.getPositionTitle();
+    public void checkPositionEvent(String positionTitle, Long eventId) {
         Optional<Position> position = Optional.ofNullable(positionRepository.findByPositionTitle(positionTitle));
         if (position.isPresent()) {
             Long positionEventId = position.get().getEvent().getId();
-            if (Objects.equals(positionEventId, request.getEventId())) {
+            if (Objects.equals(positionEventId, eventId)) {
                 String errorMessage = "position with the title " + positionTitle +
                         " already exist in this event.";
                 throw new AlreadyExistException(errorMessage);
@@ -77,8 +76,9 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public Set<PositionResponse> getAllPosition() {
-        List<Position> positions = positionRepository.findAll();
+    public Set<PositionResponse> getAllPosition(String userName) {
+        User user = userService.getUserByUsername(userName);
+        Set<Position> positions = user.getEvent().getPositions();
         return Mapper.positionToPositionModels(positions);
     }
 

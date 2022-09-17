@@ -1,5 +1,6 @@
 package com.shazzar.voteme.model;
 
+import com.shazzar.voteme.entity.Candidate;
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
@@ -10,11 +11,11 @@ import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResp
 import com.shazzar.voteme.model.responsemodel.PositionResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.AdminResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.GetAllUserResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserResponse;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Mapper {
@@ -64,6 +65,14 @@ public class Mapper {
         response.setJwtToken(jwt);
         return response;
     }
+
+    public static Set<GetAllUserResponse> getAllUserResponses(Set<User> users) {
+        Set<GetAllUserResponse> userResponses = new HashSet<>();
+        for (User user : users) {
+            userResponses.add(new GetAllUserResponse(user.getFullName(), user.getEmail()));
+        }
+        return userResponses;
+    }
     
     public static TokenResponse eventToTokenModel(ElectionEvent event) {
         TokenResponse tokenResponse = new TokenResponse();
@@ -87,7 +96,14 @@ public class Mapper {
         PositionResponse positionResponse = new PositionResponse();
         positionResponse.setPositionTitle(position.getPositionTitle());
         positionResponse.setEventName(position.getEvent().getEventName());
-        positionResponse.setHolderName(position.getHolder().getFullName());
+        if (position.getHolder() != null) {
+            positionResponse.setHolderName(position.getHolder().getFullName());
+        }
+        Set<String> aspirantNames = new HashSet<>();
+        for (Candidate candidate : position.getAspirants()) {
+            aspirantNames.add(candidate.getCandidateFullName());
+        }
+        positionResponse.setAspirantNames(aspirantNames);
         return positionResponse;
     }
     

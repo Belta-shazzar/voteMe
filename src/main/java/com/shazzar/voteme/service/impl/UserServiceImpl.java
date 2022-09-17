@@ -1,5 +1,6 @@
 package com.shazzar.voteme.service.impl;
 
+import com.shazzar.voteme.config.userauth.AppUserService;
 import com.shazzar.voteme.entity.Candidate;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
@@ -9,6 +10,7 @@ import com.shazzar.voteme.entity.role.AppUserRole;
 import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.model.Mapper;
 import com.shazzar.voteme.model.requestmodel.userrequest.*;
+import com.shazzar.voteme.model.responsemodel.userresponse.GetAllUserResponse;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
@@ -27,6 +29,7 @@ import java.util.UUID;
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final AppUserService appUserService;
     private final PasswordEncoder passwordEncoder;
     private final ElectionEventServiceImpl eEventService;
     private final PositionServiceImpl positionService;
@@ -36,17 +39,18 @@ public class UserServiceImpl implements UserService {
 
 //    TODO: Implement method to validate email and password
     
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+    public UserServiceImpl(UserRepository userRepository, AppUserService appUserService, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
                            CandidateServiceImpl candidateService, ConfirmationTokenService cTokenService) {
         this.userRepository = userRepository;
+        this.appUserService = appUserService;
         this.passwordEncoder = passwordEncoder;
         this.eEventService = eEventService;
         this.positionService = positionService;
         this.candidateService = candidateService;
         this.cTokenService = cTokenService;
     }
-    
+
     public User getById(Long id) throws ResourceNotFoundException {
         
         return userRepository.findById(id).orElseThrow(() ->
@@ -121,9 +125,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @SneakyThrows
-    public UserActionResponse switchCandidateToUser(RoleSwitchRequest switchRequest) {
-        User user = getById(switchRequest.getCandidateId());
-        ElectionEvent event = eEventService.getEventById(switchRequest.getElectionId());
+    public UserActionResponse switchCandidateToUser(Long candidateId, String userName) {
+        User adminUser = appUserService.getUserByUsername(userName);
+        User user = getById(candidateId);
+        ElectionEvent event = adminUser.getEvent();
         if (user.getEvent().equals(event) && user.getRole().equals(AppUserRole.CANDIDATE)) {
             user.setRole(AppUserRole.USER);
             candidateService.deleteCandidate(user.getId());
@@ -181,6 +186,13 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public Set<GetAllUserResponse> getUsers(String userName) {
+        User user = appUserService.getUserByUsername(userName);
+        Set<User> users = user.getEvent().getUsers();
+        return Mapper.getAllUserResponses(users);
     }
 
     @SneakyThrows
