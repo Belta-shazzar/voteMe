@@ -49,7 +49,7 @@ public class ConfirmationTokenService {
 
         if (expiryTime.isBefore(LocalDateTime.now())) {
             repo.delete(token);
-            userService.deleteUser(token.getUser());
+            userService.deleteUserWithExpiredToken(token.getUser());
             throw new IllegalStateException("token expired. Signup again");
 //            TODO: Create new confirmation token
         } else {

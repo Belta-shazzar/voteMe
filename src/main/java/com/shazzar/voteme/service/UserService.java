@@ -18,8 +18,10 @@ public interface UserService {
 
     UserActionResponse castVote(VoteRequest vote, String username);
 
-    void deleteUser(User user);
+    void deleteUserWithExpiredToken(User user);
 
     Set<GetAllUserResponse> getUsers(String userName);
+
+    void deleteUser(String name);
 }
 

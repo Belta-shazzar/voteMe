@@ -40,5 +40,12 @@ public class UserController {
         return new ResponseEntity<>(userService.getUsers(authentication.getName()), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('Role_ADMIN', 'Role_CANDIDATE', 'Role_USER')")
+    @DeleteMapping
+    public ResponseEntity<UserActionResponse> deleteUser(Authentication authentication) {
+        userService.deleteUser(authentication.getName());
+        return new ResponseEntity<>(new UserActionResponse("deleted successfully"), HttpStatus.OK);
+    }
+
 
 }

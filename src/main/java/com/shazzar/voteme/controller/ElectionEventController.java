@@ -4,6 +4,7 @@ import com.shazzar.voteme.model.requestmodel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionResultResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,12 @@ public class ElectionEventController {
     @GetMapping("/result")
     public ResponseEntity<ElectionResultResponse> getElectionResult(Authentication authentication) {
         return new ResponseEntity<>(eventService.getElectionResult(authentication.getName()), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('Role_ADMIN')")
+    @DeleteMapping
+    public ResponseEntity<UserActionResponse> deleteEvent(Authentication authentication) {
+        eventService.deleteEvent(authentication.getName());
+        return new ResponseEntity<>(new UserActionResponse("Event deleted successfully"), HttpStatus.OK);
     }
 }

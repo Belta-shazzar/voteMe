@@ -180,7 +180,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(String name) {
+        User user = appUserService.getUserByUsername(name);
+        if (user.getRole().equals(AppUserRole.ADMIN)) {
+            eEventService.deleteEvent(name);
+        }
+        deleteUserWithExpiredToken(user);
+    }
+
+    @Override
+    public void deleteUserWithExpiredToken(User user) {
         if (user.getRole() == AppUserRole.CANDIDATE) {
             candidateService.deleteCandidate(user.getId());
         }

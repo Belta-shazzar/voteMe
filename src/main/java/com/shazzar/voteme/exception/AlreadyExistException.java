@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT)
 public class AlreadyExistException extends Exception {
-    
-    @java.io.Serial
+
     private static final long serialVersionUID = 1L;
 
     public AlreadyExistException(String message) {

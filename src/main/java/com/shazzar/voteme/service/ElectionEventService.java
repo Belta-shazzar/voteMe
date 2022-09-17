@@ -5,6 +5,7 @@ import com.shazzar.voteme.model.requestmodel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionResultResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 
 public interface ElectionEventService {
     
@@ -15,4 +16,5 @@ public interface ElectionEventService {
 
     ElectionResultResponse getElectionResult(String name);
 
+    void deleteEvent(String name);
 }

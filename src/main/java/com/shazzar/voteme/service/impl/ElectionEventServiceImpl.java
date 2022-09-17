@@ -11,6 +11,7 @@ import com.shazzar.voteme.model.requestmodel.ElectionDateSetRequest;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionEventResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.ElectionResultResponse;
 import com.shazzar.voteme.model.responsemodel.electionresponse.TokenResponse;
+import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.repository.ElectionEventRepo;
 import com.shazzar.voteme.service.ElectionEventService;
 import lombok.SneakyThrows;
@@ -99,6 +100,12 @@ public class ElectionEventServiceImpl implements ElectionEventService {
         } else {
             throw new IllegalArgumentException("Election is yet to end");
         }
+    }
+
+    @Override
+    public void deleteEvent(String name) {
+        User user = userService.getUserByUsername(name);
+        eventRepo.delete(user.getEvent());
     }
 
     public LocalDateTime dateTimeFormat(String dateTimeString) {
