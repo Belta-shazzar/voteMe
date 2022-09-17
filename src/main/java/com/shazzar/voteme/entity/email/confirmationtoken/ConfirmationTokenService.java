@@ -2,7 +2,9 @@ package com.shazzar.voteme.entity.email.confirmationtoken;
 
 import com.shazzar.voteme.entity.User;
 import com.shazzar.voteme.entity.email.EmailService;
+import com.shazzar.voteme.exception.ResourceNotFoundException;
 import com.shazzar.voteme.service.impl.UserServiceImpl;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +39,11 @@ public class ConfirmationTokenService {
         return "Account created successfully. Kindly click the link sent to your mail to confirm your account";
     }
 
+    @SneakyThrows
     @Transactional
     public String confirmToken(String confirmationToken) {
-        ConfirmationToken token = repo.getByToken(confirmationToken);
+        ConfirmationToken token = repo.getByToken(confirmationToken).orElseThrow(() ->
+                new ResourceNotFoundException("Token does not exist"));
 
         LocalDateTime expiryTime = token.getExpiresAt();
 
@@ -49,7 +53,9 @@ public class ConfirmationTokenService {
             throw new IllegalStateException("token expired. Signup again");
 //            TODO: Create new confirmation token
         } else {
-            return userService.updateIsEnabled(token.getUser());
+            String isEnabledResult = userService.updateIsEnabled(token.getUser());
+            repo.delete(token);
+            return isEnabledResult;
         }
     }
 }

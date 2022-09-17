@@ -1,6 +1,5 @@
 package com.shazzar.voteme.service.impl;
 
-import com.shazzar.voteme.config.userauth.AppUser;
 import com.shazzar.voteme.entity.Candidate;
 import com.shazzar.voteme.entity.ElectionEvent;
 import com.shazzar.voteme.entity.Position;
@@ -13,7 +12,6 @@ import com.shazzar.voteme.model.requestmodel.userrequest.*;
 import com.shazzar.voteme.model.responsemodel.userresponse.UserActionResponse;
 import com.shazzar.voteme.repository.UserRepository;
 import com.shazzar.voteme.service.UserService;
-import com.shazzar.voteme.util.JwtUtil;
 import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,21 +32,19 @@ public class UserServiceImpl implements UserService {
     private final PositionServiceImpl positionService;
     private final CandidateServiceImpl candidateService;
     private final ConfirmationTokenService cTokenService;
-    private final JwtUtil jwtUtil;
     private static final String NOT_FOUND_ERROR_MSG = "%s with %s %s, not found";
 
 //    TODO: Implement method to validate email and password
     
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            ElectionEventServiceImpl eEventService, PositionServiceImpl positionService,
-                           CandidateServiceImpl candidateService, ConfirmationTokenService cTokenService, JwtUtil jwtUtil) {
+                           CandidateServiceImpl candidateService, ConfirmationTokenService cTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.eEventService = eEventService;
         this.positionService = positionService;
         this.candidateService = candidateService;
         this.cTokenService = cTokenService;
-        this.jwtUtil = jwtUtil;
     }
     
     public User getById(Long id) throws ResourceNotFoundException {
@@ -72,8 +68,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return new UserActionResponse(accCreateResponse);
-//        String jwt = jwtUtil.generateToken(new AppUser(user));
-//        return Mapper.admin2UserModel(user, jwt);
     }
 
     public String nullCheck(String nameToCheck) {
@@ -108,11 +102,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         candidateService.addCandidate(positionId, user);
         String accCreateResponse = cTokenService.createToken(user);
-        userRepository.save(user);
 
         return new UserActionResponse(accCreateResponse);
-//        String jwt = jwtUtil.generateToken(new AppUser(user));
-//        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
@@ -126,8 +117,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return new UserActionResponse(accCreateResponse);
-//        String jwt = jwtUtil.generateToken(new AppUser(user));
-//        return Mapper.user2UserModel(user, jwt);
     }
 
     @Override
