@@ -10,5 +10,6 @@ public class VoteMeApplication {
     }
 // TODO: complete CRUD endpoints, Implement download feature, Check election result, Set election winner
 //    Also add entity id to all response and Mapper
+//    Remove email ui from logging to the console
 
 }
