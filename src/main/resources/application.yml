@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: postgres://rlxqpmiopfceor:4a936cc8b28d2f9a3cf91a620356ae0a1a0ad9f0b853597eaff4d41f673359ee@ec2-52-203-118-49.compute-1.amazonaws.com:5432/d2o1sv9rutpjom
-    username: rlxqpmiopfceor
-    password: 4a936cc8b28d2f9a3cf91a620356ae0a1a0ad9f0b853597eaff4d41f673359ee
+    url: postgres://uhlkvfsmgicnvd:27845b5cf4df6e41430dbbcc095275cb17ebdc1b24e2378d3dcf76ec16edc486@ec2-34-200-205-45.compute-1.amazonaws.com:5432/d8ah8156b77d3n
+    username: uhlkvfsmgicnvd
+    password: 27845b5cf4df6e41430dbbcc095275cb17ebdc1b24e2378d3dcf76ec16edc486
   jpa:
     hibernate:
       ddl-auto: update
