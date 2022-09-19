@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/voteMe?useSSL=false
-    username: shazzar
-    password: Las-jefa5
+    url: postgres://uhlkvfsmgicnvd:27845b5cf4df6e41430dbbcc095275cb17ebdc1b24e2378d3dcf76ec16edc486@ec2-34-200-205-45.compute-1.amazonaws.com:5432/d8ah8156b77d3n
+    username: uhlkvfsmgicnvd
+    password: 27845b5cf4df6e41430dbbcc095275cb17ebdc1b24e2378d3dcf76ec16edc486
   jpa:
     hibernate:
       ddl-auto: update
